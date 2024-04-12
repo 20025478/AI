@@ -1,3 +1,9 @@
+!pip install beautifulsoup4
+!pip install schedule
+!pip install pandas openpyxl
+!pip install pymssql
+!pip install pyodbc
+
 import requests
 from bs4 import BeautifulSoup
 import schedule
