@@ -1,15 +1,3 @@
-%%sh
-curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
-sudo apt-get update
-sudo ACCEPT_EULA=Y apt-get -q -y install msodbcsql17
-
-!pip install beautifulsoup4
-!pip install schedule
-!pip install pandas openpyxl
-!pip install pymssql
-!pip install pyodbc
-
 import requests
 from bs4 import BeautifulSoup
 import schedule
@@ -17,6 +5,9 @@ import time
 import os
 import pandas as pd
 import pymssql
+
+# Global list to store temperature readings
+temperature_readings = []
 
 def scrape_weather():
     url = 'https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected'
@@ -27,7 +18,7 @@ def scrape_weather():
         print(f"Error fetching data, status code: {html.status_code}")
         return
 
-    weather_details = {'Location':'NA' , 'timestamp': 'NA', 'Weather Update': 'NA', 'Temperature': 'NA', 'Day night temp': 'NA', 'Alert': 'NA', 'Climate Now': 'NA', 'Climate Info': 'NA'}
+    weather_details = {'Location':'NA', 'Timestamp': 'NA', 'Weather Update': 'NA', 'Temperature': 'NA', 'Day night temp': 'NA', 'Alert': 'NA', 'Climate Now': 'NA', 'Climate Info': 'NA'}
 
     location_tag = soup.find('h1', class_='CurrentConditions--location--1YWj_')
     timestamp_tag = soup.find('span', class_='CurrentConditions--timestamp--1ybTk')
@@ -47,16 +38,18 @@ def scrape_weather():
     weather_details['Climate Now'] = climate_now_tag.text.strip() if climate_now_tag else 'NA'
     weather_details['Climate Info'] = climate_info_tag.text.strip() if climate_info_tag else 'NA'
 
+    if temperature_tag:
+        temp_value = temperature_tag.text.strip()[:-1]
+        if temp_value.replace('.', '', 1).isdigit():
+            temperature_readings.append(float(temp_value))
+
     print_console(weather_details)
     save_to_excel(weather_details)
     sql_connection(weather_details)
 
 def print_console(weather_details):
     for key, value in weather_details.items():
-        if key == 'Alert':
-            print(f"{key}: {value}")
-        else:
-            print(f"{key}: {value}")
+        print(f"{key}: {value}")
 
 def save_to_excel(weather_details):
     convert_data_df = pd.DataFrame([weather_details])
@@ -81,7 +74,7 @@ def sql_connection(weather_details):
     try:
         conn = pymssql.connect(server, user, password, database)
         cursor = conn.cursor()
-        sql = """INSERT INTO Weather_Information (Location, Timestamp, Weather_Update, Temperature, Day_Night_Temp, Alert, Climate_Now, Climate_Info)
+        sql = """INSERT INTO Weather_data_info (Location, Timestamp, Weather_Update, Temperature, Day_Night_Temp, Alert, Climate_Now, Climate_Info)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
         cursor.execute(sql, (weather_details['Location'], weather_details['Timestamp'], weather_details['Weather Update'],
                              weather_details['Temperature'], weather_details['Day night temp'], weather_details['Alert'],
@@ -94,8 +87,38 @@ def sql_connection(weather_details):
         if conn is not None:
             conn.close()
 
+def summarize_day():
+    if temperature_readings:
+        min_temp = min(temperature_readings)
+        max_temp = max(temperature_readings)
+        average_temp = sum(temperature_readings) / len(temperature_readings)
+        print(f"Daily Min Temp: {min_temp}, Max Temp: {max_temp}, Avg Temp: {average_temp}")
+        sql_connection_summary(min_temp, max_temp, average_temp)
+
+def sql_connection_summary(min_temp, max_temp, average_temp):
+    server = '20025478.database.windows.net'
+    user = 'preethi'
+    password = 'Lokesh98@'
+    database = '20025478_2024-04-09T15-08Z'
+    conn = None
+    try:
+        conn = pymssql.connect(server, user, password, database)
+        cursor = conn.cursor()
+        sql = """INSERT INTO Daily_Summary (Min_Temp, Max_Temp, Average_Temp)
+                 VALUES (%s, %s, %s)"""
+        cursor.execute(sql, (min_temp, max_temp, average_temp))
+        conn.commit()
+        print("Daily summary saved to SQL database successfully")
+    except Exception as e:
+        print(f"SQL Connection Error: {e}")
+    finally:
+        if conn is not None:
+            conn.close()
+
 if __name__ == "__main__":
     schedule.every(60).seconds.do(scrape_weather)
+    schedule.every(60).seconds.do(summarize_day)
+    #schedule.every().day.at("21:00").do(summarize_day)
     while True:
         schedule.run_pending()
         time.sleep(1)
