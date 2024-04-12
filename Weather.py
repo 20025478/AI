@@ -117,8 +117,7 @@ def sql_connection_summary(min_temp, max_temp, average_temp):
 
 if __name__ == "__main__":
     schedule.every(60).seconds.do(scrape_weather)
-    schedule.every(60).seconds.do(summarize_day)
-    #schedule.every().day.at("21:00").do(summarize_day)
+    schedule.every().day.at("21:00").do(summarize_day)
     while True:
         schedule.run_pending()
         time.sleep(1)
