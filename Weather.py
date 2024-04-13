@@ -6,6 +6,9 @@ import pymssql
 import os
 import json
 
+CACHE_FILE = "cache.json"
+temperature_readings = []
+
 def load_cache():
     if os.path.exists(CACHE_FILE):
         with open(CACHE_FILE, 'r') as file:
@@ -15,8 +18,6 @@ def load_cache():
 def save_cache(data):
     with open(CACHE_FILE, 'w') as file:
         json.dump(data, file)
-
-temperature_readings = []
 
 def scrape_weather():
     url = 'https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected'
@@ -146,7 +147,7 @@ def save_summary_to_sql(min_temp, max_temp, average_temp):
 
 if __name__ == "__main__":
     temperature_readings = load_cache()
-    schedule.every(60).seconds.do(scrape_weather)
+    schedule.every(15).minutes.do(scrape_weather)
     schedule.every().day.at("21:00").do(summarize_day)
     while True:
         schedule.run_pending()
