@@ -4,24 +4,19 @@
 ## Project OverView:
 
 Daily Weather Monitoring system is a python program that automatically collects weather information from the weather.com site every 15 minutes and records it. It tracks daily temperature changes and stores this data in a database. At the end of each day, it also calculates and saves the day's lowest, highest, and average temperatures. This system helps in keeping a consistent check on weather conditions.
-
 ### Installation and setup:
 1. Initially wrote the python code in the Google colab
    https://colab.research.google.com/drive/1RxGw_YBFnAYcMMLA2Y5wBbKP2AEp2uyy#scrollTo=CSMfeb2P7kOs
 3. Created the file in the repository in Github Weather.py and pulled the file using
-   preet@dbs-class:~/AI$ cd
-   preet@dbs-class:~$ cd AI
-   preet@dbs-class:~/AI$ git pull origin main
+   git pull origin main
 4. Installed the required packages
    pip install beautifulsoup4
    pip install pymssql
-5. https://github.com/20025478/AI/blob/main/Weather.py  ->script to be pulled
-
+5. https://github.com/20025478/AI/blob/main/Weather.py
 ### Tools Used:
 -Python
 -GitHub
 -SQL Database
-
 ### Website Used:
 https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected
 
