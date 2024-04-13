@@ -1,10 +1,17 @@
                                     
 
-                                                     # Daily Weather Monitoring system 
-                                                            
-                                                        
-## Project Overview:
+                                                     
+**Course:** B9AI108 PROGRAMMING FOR DATA ANALYSIS (B9AI108_2324_TMD2)
 
+**Lecturer:** paul-laird
+
+**Student Name:** Preethi Manoharan
+
+**Student ID:** 20025478
+
+                                                            
+## Project Title: Daily weather Monitoring                                                       
+### Project Overview:
 Daily Weather Monitoring system is a python program that automatically collects weather information from the weather.com site every 15 minutes and records it. It tracks daily temperature changes and stores this data in a database. At the end of each day, it also calculates and saves the day's lowest, highest, and average temperatures. This system helps in keeping a consistent check on weather conditions.
 ### Installation and setup:
 1. Initially wrote the python code in the Google colab
