@@ -79,7 +79,7 @@ def save_to_sql(weather_details):
         sql = """
             INSERT INTO Weather_data_info (
                 Location, Timestamp, Weather_Update, Current_Temperature,
-                Day_Night_Temp, Alert, Climate_Now, Climate_Info
+                Day_temp, Night_temp, Alert, Climate_Now, Climate_Info
             ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(sql, (
