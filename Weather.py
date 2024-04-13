@@ -6,42 +6,52 @@ import os
 import pandas as pd
 import pymssql
 
-# Global list to store temperature readings
 temperature_readings = []
 
 def scrape_weather():
     url = 'https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected'
-    html = requests.get(url)
-    if html.status_code == 200:
-        soup = BeautifulSoup(html.text, 'html.parser')
-    else:
-        print(f"Error fetching data, status code: {html.status_code}")
-        return
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-    weather_details = {'Location':'NA', 'Timestamp': 'NA', 'Weather Update': 'NA', 'Temperature': 'NA', 'Day night temp': 'NA', 'Alert': 'NA', 'Climate Now': 'NA', 'Climate Info': 'NA'}
+        weather_details = extract_weather_details(soup)
 
+
+        if weather_details['Current Temperature'] != 'NA':
+            temp_value = weather_details['Current Temperature'].replace('°', '')
+            if temp_value.replace('.', '', 1).isdigit():
+                temperature_readings.append(float(temp_value))
+
+        save_to_sql(weather_details)
+
+    except requests.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def extract_weather_details(soup):
     location_tag = soup.find('h1', class_='CurrentConditions--location--1YWj_')
     timestamp_tag = soup.find('span', class_='CurrentConditions--timestamp--1ybTk')
-    weather_update_tag = soup.find('div', class_='CurrentConditions--phraseValue--mZC_p')
     temperature_tag = soup.find('span', class_='CurrentConditions--tempValue--MHmYY')
     day_night_temp_tag = soup.find('div', class_='CurrentConditions--tempHiLoValue--3T1DG')
-    alert_headline_tag = soup.find('h2', class_='AlertHeadline--alertText--38xov')
-    climate_now_tag = soup.find("h2", class_='InsightNotification--headline--3gJfC PrecipIntensityCard--InsightHeadline--22w7Q')
-    climate_info_tag = soup.find("p", class_='InsightNotification--text--35QdL')
 
-    weather_details['Location'] = location_tag.text.strip() if location_tag else 'NA'
-    weather_details['Timestamp'] = timestamp_tag.text.strip().replace('As of','') if timestamp_tag else 'NA'
-    weather_details['Weather Update'] = weather_update_tag.text.strip() if weather_update_tag else 'NA'
-    weather_details['Temperature'] = temperature_tag.text.strip() if temperature_tag else 'NA'
-    weather_details['Day night temp'] = day_night_temp_tag.text.strip().replace('•', '/') if day_night_temp_tag else 'NA'
-    weather_details['Alert'] = alert_headline_tag.text.strip() if alert_headline_tag else 'NA'
-    weather_details['Climate Now'] = climate_now_tag.text.strip() if climate_now_tag else 'NA'
-    weather_details['Climate Info'] = climate_info_tag.text.strip() if climate_info_tag else 'NA'
+    weather_details = {
+        'Location': location_tag.get_text(strip=True) if location_tag else 'NA',
+        'Timestamp': timestamp_tag.get_text(strip=True).replace('As of', '') if timestamp_tag else 'NA',
+        'Current Temperature': temperature_tag.get_text(strip=True) if temperature_tag else 'NA',
+        'Day Temp': '',
+        'Night Temp': ''
+    }
 
-    if temperature_tag:
-        temp_value = temperature_tag.text.strip()[:-1]
-        if temp_value.replace('.', '', 1).isdigit():
-            temperature_readings.append(float(temp_value))
+    if day_night_temp_tag:
+        temperature_tags = day_night_temp_tag.find_all('span', {'data-testid': 'TemperatureValue'})
+        if temperature_tags and len(temperature_tags) >= 2:
+            weather_details['Day Temp'] = temperature_tags[0].get_text(strip=True)
+            weather_details['Night Temp'] = temperature_tags[1].get_text(strip=True)
+
+    return weather_details
 
     print_console(weather_details)
     save_to_excel(weather_details)
@@ -74,7 +84,7 @@ def sql_connection(weather_details):
     try:
         conn = pymssql.connect(server, user, password, database)
         cursor = conn.cursor()
-        sql = """INSERT INTO Weather_data_info (Location, Timestamp, Weather_Update, Temperature, Day_Night_Temp, Alert, Climate_Now, Climate_Info)
+        sql = """INSERT INTO Weather_data_info (Location, Timestamp, Weather_Update, Temperature, Day_temp,Night_temp, Alert, Climate_Now, Climate_Info)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
         cursor.execute(sql, (weather_details['Location'], weather_details['Timestamp'], weather_details['Weather Update'],
                              weather_details['Temperature'], weather_details['Day night temp'], weather_details['Alert'],
