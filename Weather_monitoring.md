@@ -1,9 +1,9 @@
                                     
 
-                                                     ** Daily Weather Monitoring system **
+                                                     ** # Daily Weather Monitoring system **
                                                             
                                                         
-## Project OverView:
+## Project Overview:
 
 Daily Weather Monitoring system is a python program that automatically collects weather information from the weather.com site every 15 minutes and records it. It tracks daily temperature changes and stores this data in a database. At the end of each day, it also calculates and saves the day's lowest, highest, and average temperatures. This system helps in keeping a consistent check on weather conditions.
 ### Installation and setup:
