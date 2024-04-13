@@ -52,7 +52,7 @@ The script utilizes a Microsoft SQL Server for storing the scraped weather data 
 The pymssql library is used to establish connections and interact with the SQL Server database from Python.
 ### Implementation Details:
 Functions like save_to_sql and save_summary_to_sql in the code handle the insertion of weather details and daily temperature summaries into the database. These functions create SQL queries to move data around efficiently, making sure it's well-organized and easy to find later on.
-<sub>save_to_sql</sub> and <sub>save_summary_to_sql</sub> functions manages the insertion of weather details and daily temperature summaries into the database, respectively.
+<sub>save_to_sql()</sub> and <sub>save_summary_to_sql()</sub> functions manages the insertion of weather details and daily temperature summaries into the database, respectively.
 
 
 ## Automation:
