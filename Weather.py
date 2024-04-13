@@ -3,6 +3,18 @@ from bs4 import BeautifulSoup
 import schedule
 import time
 import pymssql
+import os
+import json
+
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, 'r') as file:
+            return json.load(file)
+    return []
+
+def save_cache(data):
+    with open(CACHE_FILE, 'w') as file:
+        json.dump(data, file)
 
 temperature_readings = []
 
@@ -108,8 +120,9 @@ def summarize_day():
     average_temp = sum(temperature_readings) / len(temperature_readings)
     print(f"Daily Min Temp: {min_temp}, Max Temp: {max_temp}, Avg Temp: {average_temp}")
 
-    temperature_readings.clear()
     save_summary_to_sql(min_temp, max_temp, average_temp)
+    save_cache(temperature_readings)
+    temperature_readings.clear()
 
 def save_summary_to_sql(min_temp, max_temp, average_temp):
     server = '20025478.database.windows.net'
@@ -132,6 +145,7 @@ def save_summary_to_sql(min_temp, max_temp, average_temp):
             conn.close()
 
 if __name__ == "__main__":
+    temperature_readings = load_cache()
     schedule.every(60).seconds.do(scrape_weather)
     schedule.every().day.at("21:00").do(summarize_day)
     while True:
