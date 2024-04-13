@@ -59,8 +59,9 @@ def extract_weather_details(soup):
                 weather_details['Night Temp'] = temperature_tags[1].get_text(strip=True)
         return weather_details
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+            with open('error_log.txt', 'a') as f:
+                f.write(f"An error occurred in extract_weather_details(): {e}\n")
+            raise
 
 def print_console(weather_details):
     for key, value in weather_details.items():
