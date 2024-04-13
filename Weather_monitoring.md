@@ -1,4 +1,4 @@
-                                                                                **Daily Weather Monitoring system**
+                                                                                <b>Daily Weather Monitoring system</b>
                                                             
                                                         
 ##Project OverView:
