@@ -17,11 +17,12 @@ Daily Weather Monitoring system is a python program that automatically collects 
    pip install beautifulsoup4
    pip install pymssql
 5. https://github.com/20025478/AI/blob/main/Weather.py  ->script to be pulled
+
 ###Tools Used:
 
-Python
-GitHub
-SQL Database
+-Python
+-GitHub
+-SQL Database
 
 ###Website Used:
 https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected
