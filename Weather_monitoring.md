@@ -15,8 +15,11 @@ Daily Weather Monitoring system is a python program that automatically collects 
 5. https://github.com/20025478/AI/blob/main/Weather.py
 ### Tools Used:
 -Python
+
 -GitHub
+
 -SQL Database
+
 ### Website Used:
 https://weather.com/en-IE/weather/today/l/EIXX0014:1:EI?Goto=Redirected
 
