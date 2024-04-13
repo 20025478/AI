@@ -35,8 +35,9 @@ def extract_weather_details(soup):
         timestamp_tag = soup.find('span', class_='CurrentConditions--timestamp--1ybTk')
         temperature_tag = soup.find('span', class_='CurrentConditions--tempValue--MHmYY')
         day_night_temp_tag = soup.find('div', class_='CurrentConditions--tempHiLoValue--3T1DG')
+        weather_update_tag = soup.find('div', class_='CurrentConditions--phraseValue--mZC_p')
         alert_headline_tag = soup.find('h2', class_='AlertHeadline--alertText--38xov')
-        climate_now_tag = soup.find('div', class_='CurrentConditions--phraseValue--mZC_p')
+        climate_now_tag = soup.find("h2", class_='InsightNotification--headline--3gJfC PrecipIntensityCard--InsightHeadline--22w7Q')
         climate_info_tag = soup.find('div', class_='CurrentConditions--precipValue--RBVJT')
 
         weather_details = {
@@ -45,6 +46,7 @@ def extract_weather_details(soup):
             'Current Temperature': temperature_tag.get_text(strip=True) if temperature_tag else 'NA',
             'Day Temp': '',
             'Night Temp': '',
+            'Weather Update':weather_update_tag.get_text(strip=True) if weather_update_tag else 'NA',
             'Alert': alert_headline_tag.get_text(strip=True) if alert_headline_tag else 'NA',
             'Climate Now': climate_now_tag.get_text(strip=True) if climate_now_tag else 'NA',
             'Climate Info': climate_info_tag.get_text(strip=True) if climate_info_tag else 'NA',
@@ -80,11 +82,11 @@ def save_to_sql(weather_details):
             INSERT INTO Weather_data_info (
                 Location, Timestamp, Weather_Update, Current_Temperature,
                 Day_temp, Night_temp, Alert, Climate_Now, Climate_Info
-            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(sql, (
-            weather_details['Location'], weather_details['Timestamp'],
-            '', weather_details['Current Temperature'], weather_details['Day_temp'],weather_details['Night_temp']
+            weather_details['Location'], weather_details['Timestamp'], weather_details['Weather Update'],
+            weather_details['Current Temperature'], weather_details['Day Temp'], weather_details['Night Temp'],
             weather_details['Alert'], weather_details['Climate Now'], weather_details['Climate Info'],
         ))
         conn.commit()
