@@ -84,7 +84,7 @@ def save_to_sql(weather_details):
         """
         cursor.execute(sql, (
             weather_details['Location'], weather_details['Timestamp'],
-            '', weather_details['Current Temperature'], day_night_temp,
+            '', weather_details['Current Temperature'], weather_details['Day_temp'],weather_details['Night_temp']
             weather_details['Alert'], weather_details['Climate Now'], weather_details['Climate Info'],
         ))
         conn.commit()
