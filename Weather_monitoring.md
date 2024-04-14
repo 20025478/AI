@@ -49,6 +49,10 @@ The script identifies and extracts key weather-related data such as temperature,
 In the project, the script checks if the weather website has the information it needs. If some info isn't there, the script writes "NA" instead. This way, all the data stays neat and usable for the next steps.
 ### Data Transformation:
 The script converts extracted temperature data into float types for numerical analysis and aggregates daily temperature data for summary statistics.
+### Data Aggregation: 
+Summarized detailed data into more useful forms, such as calculating minimum, maximum, and average values of the day.
+### Data Loading: 
+Saved processed data to a storage system or database.
 ### Tools:
 The script mainly uses BeautifulSoup for HTML parsing and basic Python functions for data handling,as the data processing needs are currently straightforward.
 <sub>extract_weather_details()</sub> function searches through the webpage to gather key weather data information like location and temperature,weather updates and then ensures that, it's complete and ready for analysis.
