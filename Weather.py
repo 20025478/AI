@@ -148,7 +148,7 @@ def save_summary_to_sql(min_temp, max_temp, average_temp):
 if __name__ == "__main__":
     temperature_readings = load_cache()
     schedule.every(15).minutes.do(scrape_weather)
-    schedule.every().day.at("21:00").do(summarize_day)
+    schedule.every().day.at("23:00").do(summarize_day)
     while True:
         schedule.run_pending()
         time.sleep(1)
