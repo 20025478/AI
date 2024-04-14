@@ -43,7 +43,6 @@ For collecting weather data, the project utilizes web scraping to directly perfo
 ### Tools:
 The script uses the Python 'requests' library to fetch the page from the weather.com site and the BeautifulSoup library to parse HTML content, extracting relevant weather details.
 ### Tasks:
-The script is designed to reliably access and retrieve weather data from a website. It includes error handling mechanisms to manage potential issues like HTTP errors, ensuring smooth operation during data collection.
 <sub>scrape_weather()</sub> function collects weather data from weather.com using 'requests' and extracts details with BeautifulSoup, managing errors like HTTP problems for reliability.
 
 
@@ -51,13 +50,13 @@ The script is designed to reliably access and retrieve weather data from a websi
 ### Feature Extraction:
 <sub>extract_weather_details()</sub> function ,identifies and extracts key weather-related data such as temperature, location, and weather conditions from HTML content using BeautifulSoup.
 ### Data Cleaning:
-In cases where the data is not available, your script assigns 'NA' to maintain consistency in your dataset. This is evident in your conditional checks within the sub>extract_weather_details()</sub>  function.
+In cases where the data is not available, your script assigns 'NA' to maintain consistency in your dataset. This is evident in your conditional checks within the <sub>extract_weather_details()</sub>  function.
 ### Data Transformation:
 The script converts extracted temperature data into float types for numerical analysis and aggregates daily temperature data for summary statistics.
 ### Data Aggregation: 
-</sub>summarize_day()</sub> function, Summarize the detailed data into more useful forms, such as calculating minimum, maximum, and average values of the day.
+<sub>summarize_day()</sub> function, Summarize the detailed data into more useful forms, such as calculating minimum, maximum, and average values of the day.
 ### Data Loading: 
-</sub>save_to_sql()</sub> function, loads the processed data into a SQL database, effectively storing the transformed and aggregated data for further use.
+<sub>save_to_sql()</sub> function, loads the processed data into a SQL database, effectively storing the transformed and aggregated data for further use.
 ### Tools:
 The script mainly uses BeautifulSoup for HTML parsing and basic Python functions for data handling,as the data processing needs are currently straightforward.
 <sub>extract_weather_details()</sub> function searches through the webpage to gather key weather data information like location and temperature,weather updates and then ensures that, it's complete and ready for analysis.
@@ -65,16 +64,15 @@ The script mainly uses BeautifulSoup for HTML parsing and basic Python functions
 
 ## Data Storage :
 ### Database System:
-The script utilizes a Microsoft SQL Server for storing the scraped weather data and then calculates the min and max temp of the day and then finds the avarage of the temperature.
+Microsoft SQL Server is utilized for persistent storage of weather data.
 ### Tools:
 The pymssql library is used to establish connections and interact with the SQL Server database from Python.
 ### Implementation Details:
-Functions like save_to_sql and save_summary_to_sql in the code handle the insertion of weather details and daily temperature summaries into the database. These functions create SQL queries to move data around efficiently, making sure it's well-organized and easy to find later on.
-<sub>save_to_sql()</sub> and <sub>save_summary_to_sql()</sub> functions manages the insertion of weather details and daily temperature summaries into the database, respectively.
+Weather details and temperature summaries are efficiently inserted into the database by <sub>save_to_sql()</sub> and <sub>save_summary_to_sql()</sub> functions and making sure it's well-organized and easy to find later on.
 
 
 ## Automation:
-The script uses the <sub> schedule </sub> library to automatically run the scraping function every 15 minutes and summarize daily weather data at 21:00.
+The script uses the <sub>schedule</sub> library to automatically run the scraping function every 15 minutes and summarize daily weather data at 21:00.
 
 ## Error Handling:
 The script is designed to handle errors carefully when getting data and working with the database. If something unexpected happens, it keeps track of what went wrong, helping to understand and fix the problem later.
