@@ -1,6 +1,4 @@
-                                    
-
-                                                     
+                                                                                        
 **Course:** B9AI108 PROGRAMMING FOR DATA ANALYSIS (B9AI108_2324_TMD2)
 
 **Lecturer:** paul-laird
