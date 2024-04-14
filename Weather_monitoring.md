@@ -22,7 +22,7 @@ Daily Weather Monitoring system is a python program that automatically collects 
 4. <b>Dependency Installation:</b> Necessary Python packages were installed via pip in theMicrosoft Azure Virtual Machine environment using the command:
    pip install beautifulsoup4
    pip install pymssql
-5.<b>Running the Script:</b> To ensure the script runs continuously, even after closing the terminal, the following command was used:
+5. <b>Running the Script:</b> To ensure the script runs continuously, even after closing the terminal, the following command was used:
   <sub>nohup python3 Weather.py &</sub>  ,This command runs the script in the background and outputs the log to nohup.out
 
 ### Tools Used:
